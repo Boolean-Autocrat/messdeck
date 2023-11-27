@@ -10,6 +10,6 @@ class Staff(models.Model):
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bits_id = models.CharField(max_length=13, unique=True, default="")
+    bits_id = models.CharField(max_length=13, default="")
     hostel = models.CharField(max_length=10, default="")
     mess = models.CharField(max_length=10, default="")
