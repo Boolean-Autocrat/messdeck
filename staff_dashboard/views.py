@@ -130,9 +130,12 @@ def delete_complaint_view(request):
         complaint_id = request.POST.get("complaint_id")
         complaint = Complaints.objects.get(complaint_id=complaint_id)
         complaint.delete()
-        for file in os.listdir("static/media"):
-            if file.startswith(complaint_id):
-                os.remove(os.path.join("static/media", file))
+        try:
+            for file in os.listdir("static/media"):
+                if file.startswith(complaint_id):
+                    os.remove(os.path.join("static/media", file))
+        except:
+            pass
         messages.success(request, "Complaint deleted successfully!")
         return redirect("staffcomplaints")
     return redirect("staffcomplaints")
