@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block content %}
+<div class="container-scroller">
+  <nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+      {% if user.is_staff %}
+      <a class="sidebar-brand brand-logo" href="{% url 'staffdashboard' %}"><img
+          src="{% static 'assets/images/md_logo.svg' %}" alt="logo" /></a>
+      <a class="sidebar-brand brand-logo-mini" href="{% url 'staffdashboard' %}"><img
+          src="{% static 'assets/images/md_logo-mini.svg' %}" alt="logo" /></a>
+      {% else %}
+      <a class="sidebar-brand brand-logo" href="{% url 'studentdashboard' %}"><img
+          src="{% static 'assets/images/md_logo.svg' %}" alt="logo" /></a>
+      <a class="sidebar-brand brand-logo-mini" href="{% url 'studentdashboard' %}"><img
+          src="{% static 'assets/images/md_logo-mini.svg' %}" alt="logo" /></a>
+      {% endif %}
+    </div>
+    <ul class="nav">
+      <li class="nav-item profile">
+        <div class="profile-desc">
+          <div class="profile-pic">
+            <div class="count-indicator">
+              {% if user.is_staff %}
+              <img class="img-xs rounded-circle " src="{% static 'assets/images/faces-clipart/pic-1.png' %}" alt="">
+              {% else %}
+              <img class="img-xs rounded-circle " src="{{user.socialaccount_set.all.0.get_avatar_url}}" alt="">
+              {% endif %}
+              <span class="count bg-success"></span>
+            </div>
+            <div class="profile-name">
+              <h5 class="mb-0 font-weight-normal">{{user.first_name|title_case}} {{user.last_name|title_case}}</h5>
+            </div>
+          </div>
+          <a href="#" id="profile-dropdown" data-bs-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
+          <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list"
+            aria-labelledby="profile-dropdown">
+            <a href="{% url 'profile' %}" class="dropdown-item preview-item">
+              <div class="preview-thumbnail">
+                <div class="preview-icon bg-dark rounded-circle">
+                  <i class="mdi mdi-settings text-primary"></i>
+                </div>
+              </div>
+              <div class="preview-item-content">
+                <p class="preview-subject ellipsis mb-1 text-small">Profile</p>
+              </div>
+            </a>
+            <div class="dropdown-divider"></div>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item nav-category">
+        <span class="nav-link">Navigation</span>
+      </li>
+      {% if user.is_staff %}
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{% url 'staffdashboard' %}">
+          <span class="menu-icon">
+            <i class="mdi mdi-speedometer"></i>
+          </span>
+          <span class="menu-title">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{% url 'staffdashboard' %}#update-menu">
+          <span class="menu-icon">
+            <i class="mdi mdi-food"></i>
+          </span>
+          <span class="menu-title">Update Menu</span>
+        </a>
+      </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{% url 'staffcomplaints' %}">
+          <span class="menu-icon">
+            <i class="mdi mdi-account-star"></i>
+          </span>
+          <span class="menu-title">Complaints/Feedback</span>
+        </a>
+      </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{% url 'calculate_fees' %}">
+          <span class="menu-icon">
+            <i class="mdi mdi-calculator"></i>
+          </span>
+          <span class="menu-title">Calculate Fees</span>
+        </a>
+      </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{% url 'export_bills' %}">
+          <span class="menu-icon">
+            <i class="mdi mdi-currency-inr"></i>
+          </span>
+          <span class="menu-title">Export Bills</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{% url 'studentdashboard' %}">
+          <span class="menu-icon">
+            <i class="mdi mdi-speedometer"></i>
+          </span>
+          <span class="menu-title">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{% url 'studentdashboard' %}#feedback-complaints">
+          <span class="menu-icon">
+            <i class="mdi mdi-account-star"></i>
+          </span>
+          <span class="menu-title">Feedback/Complaints</span>
+        </a>
+      </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{% url 'studentdashboard' %}#rate-menu">
+          <span class="menu-icon">
+            <i class="mdi mdi-food"></i>
+          </span>
+          <span class="menu-title">Rate Menu</span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  <!-- partial -->
+  <div class="container-fluid page-body-wrapper">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar p-0 fixed-top d-flex flex-row">
+      <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo-mini" href=""><img src="{% static 'assets/images/md_logo-mini.svg' %}"
+            alt="logo" /></a>
+      </div>
+      <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="mdi mdi-menu"></span>
+        </button>
+        <ul class="navbar-nav w-100">
+          <li class="nav-item w-100">
+            <form class="nav-link mt-2 mt-md-0 d-none d-lg-flex search">
+              <input type="text" class="form-control" placeholder="Search products">
+            </form>
+          </li>
+        </ul>
+        <ul class="navbar-nav navbar-nav-right">
+          <li class="nav-item dropdown">
+            <a class="nav-link" id="profileDropdown" href="#" data-bs-toggle="dropdown">
+              <div class="navbar-profile">
+                {% if user.is_staff %}
+                <img class="img-xs rounded-circle " src="{% static 'assets/images/faces-clipart/pic-1.png' %}" alt="">
+                {% else %}
+                <img class="img-xs rounded-circle " src="{{user.socialaccount_set.all.0.get_avatar_url}}" alt="">
+                {% endif %}
+                <p class="mb-0 d-none d-sm-block navbar-profile-name">{{user.first_name|title_case}}
+                  {{user.last_name|title_case}}</p>
+                <i class="mdi mdi-menu-down d-none d-sm-block"></i>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+              aria-labelledby="profileDropdown">
+              <div class="dropdown-divider"></div>
+              <a href="{% url 'profile' %}" class="dropdown-item preview-item">
+                <div class="preview-thumbnail">
+                  <div class="preview-icon bg-dark rounded-circle">
+                    <i class="mdi mdi-settings text-success"></i>
+                  </div>
+                </div>
+                <div class="preview-item-content">
+                  <p class="preview-subject mb-1">Profile</p>
+                </div>
+              </a>
+              <div class="dropdown-divider"></div>
+              <a href="{% url 'logout' %}" class="dropdown-item preview-item">
+                <div class="preview-thumbnail">
+                  <div class="preview-icon bg-dark rounded-circle">
+                    <i class="mdi mdi-logout text-danger"></i>
+                  </div>
+                </div>
+                <div class="preview-item-content">
+                  <p class="preview-subject mb-1">Log out</p>
+                </div>
+              </a>
+              <div class="dropdown-divider"></div>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+          data-toggle="offcanvas">
+          <span class="mdi mdi-format-line-spacing"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="main-panel">
+      {% if messages %}
+      <div class="container mt-3">
+        <div class="msg_container">
+          <ul class="list-group">
+            {% for message in messages %} {% if message.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+            {% elif message.tags == 'warning' %}
+            <div class="alert alert-warning" role="alert">{{ message }}</div>
+            {% else %}
+            <div class="alert alert-success" role="alert">{{ message }}</div>
+            {% endif %} {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+      {% block content1 %} {% endblock content1 %}
+    </div>
+  </div>
+</div>
+{% endblock %}

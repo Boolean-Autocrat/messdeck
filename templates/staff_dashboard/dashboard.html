@@ -1,0 +1,117 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Staff Dashboard{% endblock %}
+{% block content1 %}
+
+<div class="content-wrapper">
+  <div class="row">
+    <h1>Attendance Counts for the Last 5 Days</h1>
+    <div class="card mb-3">
+      <div class="card-body">
+        {% if attendance_counts|length == 0 %}
+        <h3>No Data Available!</h3>
+        {% endif %}
+        <div class="row">
+          <div class="col-sm-3">
+            <h3>Day</h3>
+            {% for day in last_five_days %}
+            <div class="row icons-list">
+              <div>{{ day }}</div>
+            </div>
+            {% endfor %}
+          </div>
+          {% for meal_data in attendance_counts %}
+          <div class="col-sm-3">
+            <h3>{{ meal_data.meal }}</h3>
+            <div class="row icons-list">
+              {% for count in meal_data.counts %}
+              <div>{{ count }}</div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <h1>Menu Ratings for {{month}}</h1>
+    {% for menu in all_menus %}
+    <div class="card mb-3">
+      <div class="card-header">
+        <a data-bs-toggle="collapse" href="#collapse-{{menu.date|remove_spaces}}" role="button" aria-expanded="false"
+          aria-controls="collapse-{{menu.date|remove_spaces}}">
+          <div style="display: flex; justify-content: space-between;">
+            <span>
+              <i class="mdi mdi-arrow-right float-start"></i>
+              {{menu.date}}</span> {% if menu.item_ratings.values|average_ratings == 0 %}
+            <span class="badge badge-pill badge-danger">No Ratings</span>
+            {% elif menu.item_ratings.values|average_ratings < 2 %} <span class="badge badge-pill badge-danger">
+              {{menu.item_ratings.values|average_ratings}}</span>
+              {% elif menu.item_ratings.values|average_ratings < 3 %} <span class="badge badge-pill badge-warning">
+                {{menu.item_ratings.values|average_ratings}}</span>
+                {% elif menu.item_ratings.values|average_ratings < 4 %} <span class="badge badge-pill badge-info">
+                  {{menu.item_ratings.values|average_ratings}}</span>
+                  {% else %}
+                  <span class="badge badge-pill badge-success">{{menu.item_ratings.values|average_ratings}}</span>
+                  {% endif %}
+          </div>
+        </a>
+      </div>
+      <div id="collapse-{{menu.date|remove_spaces}}" class="collapse card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <h5 class="card-title">Overall Avg. Rating:
+              {% if menu.item_ratings.values|average_ratings == 0 %}
+              <span class="badge badge-pill badge-danger">No Ratings</span>
+              {% elif menu.item_ratings.values|average_ratings < 2 %} <span class="badge badge-pill badge-danger">
+                {{menu.item_ratings.values|average_ratings}}</span>
+                {% elif menu.item_ratings.values|average_ratings < 3 %} <span class="badge badge-pill badge-warning">
+                  {{menu.item_ratings.values|average_ratings}}</span>
+                  {% elif menu.item_ratings.values|average_ratings < 4 %} <span class="badge badge-pill badge-info">
+                    {{menu.item_ratings.values|average_ratings}}</span>
+                    {% else %}
+                    <span class="badge badge-pill badge-success">{{menu.item_ratings.values|average_ratings}}</span>
+                    {% endif %}
+            </h5>
+            <div class="row">
+              <div class="col-lg-12 grid-margin">
+                <div class="row icons-list">
+                  {% for item, avg_rating in menu.item_ratings.items %}
+                  <div style="justify-content: space-between;" class="col-sm-4">
+                    <span>{{item}}</span>
+                    {% if avg_rating == 0 %}
+                    <span class="badge badge-pill badge-danger">No Ratings</span>
+                    {% elif avg_rating < 2 %} <span class="badge badge-pill badge-danger">{{avg_rating}}</span>
+                      {% elif avg_rating < 3 %} <span class="badge badge-pill badge-warning">{{avg_rating}}</span>
+                        {% elif avg_rating < 4 %} <span class="badge badge-pill badge-info">{{avg_rating}}</span>
+                          {% else %}
+                          <span class="badge badge-pill badge-success">{{avg_rating}}</span>
+                          {% endif %}
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    <div class="card">
+      <div class="card-body">
+        <div id="update-menu" class="row">
+          <h3>Update the Mess Menu</h3>
+          <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="formFileLg" class="form-label">Select a ".xlsx" file below:</label>
+            <input name="update_menu" class="form-control form-control-lg" id="formFileLg" type="file" accept=".xlsx" />
+            <button class="btn btn-lg mt-3 px-5 btn-success" type="submit">
+              Update
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content1 %}

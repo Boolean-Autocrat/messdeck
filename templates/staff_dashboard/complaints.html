@@ -1,0 +1,81 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Staff Dashboard{% endblock %}
+{% block content1 %}
+<div class="content-wrapper">
+    <div class="row">
+        <div class="row">
+            {% if complaints|length == 0 %}
+            <div class="col-sm-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="mb-2">No Complaints or Feedback!</h3>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <h1>Complaints/Feedback from Students</h1>
+            {% for complaint in complaints %}
+            <div class="col-sm-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="text-muted font-weight-normal">{{complaint.complaint_date}}</h6>
+                        <h3 class="mb-2">Status: {{complaint.complaint_status}}</h3>
+                        <h5>{{complaint.student.first_name|title_case}} {{complaint.student.last_name|title_case}} says:
+                        </h5>
+                        <h6 class="mb-2">{{complaint.complaint_description}}</h6>
+                        {% if complaint.no_of_files > 0 %}
+                        <div class="row mb-1">
+                            <a data-bs-toggle="collapse" href="#complaint-{{complaint.complaint_id}}"
+                                aria-expanded="false" aria-controls="complaint-{{complaint.complaint_id}}">
+                                <button type="button" class="btn btn-primary mb-2">Supporting Images <i
+                                        id="supporting-images-icon" class="mdi mdi-arrow-down-drop-circle"></i></button>
+                                <style>
+                                    #supporting-images-icon::before {
+                                        float: right;
+                                    }
+                                </style>
+                            </a>
+                            <div style="align-items: center;" class="collapse row"
+                                id="complaint-{{complaint.complaint_id}}">
+                                {% for i in complaint.no_of_files|default:"0"|get_range %}
+                                <div class="col-sm-6">
+                                    <img style="max-height: 500px;"
+                                        src="{% static 'complaints/' %}{{ complaint.complaint_id }}_{{ i }}.png"
+                                        alt="image" class="img-fluid rounded mb-3">
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if complaint.complaint_status == 'Pending' %}
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <form method="POST">
+                                    <input hidden name="complaint_id" value="{{complaint.complaint_id}}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success btn-fw">Mark as Resolved</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <form action="{% url 'deletestaffcomplaint' %}" method="POST">
+                                    <input hidden name="complaint_id" value="{{complaint.complaint_id}}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-fw">Delete Complaint</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content1 %}

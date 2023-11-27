@@ -1,0 +1,288 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content1 %}
+
+<div class="content-wrapper">
+  <div class="row">
+    <div class="card mb-3">
+      <div class="card-header mt-2">
+        <h2>Mark Your Attendance</h2>
+      </div>
+      <div class="card-body">
+        {% if can_mark_attendance %}
+        <form method="post" action="{% url 'mark_attendance' %}">
+          {% csrf_token %}
+          <input hidden type="text" value="Mark Attendance">
+          <button class="btn btn-primary" type="submit">Mark Attendance</button>
+        </form>
+        {% else %}
+        {% if already_marked %}
+        <span>You have already marked your attendance for this meal.</span>
+        {% else %}
+        <span>Attendance can only be marked during mess hours.</span>
+        {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="card mb-3 pt-3">
+      <h1>Upcoming Meal: {{next_meal}}</h1>
+      <div class="row justify-content-center">
+        <div class="col-lg-6 grid-margin">
+          <div class="row icons-list">
+            {% for item in next_meal_content %}
+            <div style="justify-content: space-between;" class="col-sm-12">
+              <span>{{item}}</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="rate-menu" class="row">
+    <h1>Rate the Menu for {{month}}</h1>
+    {% for menu in menus %}
+    <div class="card mb-3">
+      <div class="card-header">
+        <a data-bs-toggle="collapse" href="#collapse-{{menu.date|remove_spaces}}" role="button" aria-expanded="false"
+          aria-controls="collapse-{{menu.date|remove_spaces}}">
+          <i class="mdi mdi-arrow-right float-start"></i>
+          {{menu.date}}
+        </a>
+      </div>
+      <div id="collapse-{{menu.date|remove_spaces}}" class="collapse card-body">
+        <button class="btn btn-outline-light mb-4" type="button" data-bs-toggle="modal"
+          data-bs-target="#rateMenu-{{menu.date|remove_spaces}}">Rate Menu</button>
+        <div class="modal fade" id="rateMenu-{{menu.date|remove_spaces}}" tabindex="-1"
+          aria-labelledby="rateMenuLabel-{{menu.date|remove_spaces}}" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="rateMenuLabel-{{menu.date|remove_spaces}}">Rate Menu for
+                  {{menu.date}}</h5>
+                <button type="button" class="btn-light rounded" data-bs-dismiss="modal" aria-label="Close"><i
+                    class="mdi mdi-close"></i></button>
+              </div>
+              <div class="modal-body">
+                <form id="rateMenuForm-{{ menu.date|remove_spaces }}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="menu_date" value="{{ menu.date|remove_spaces }}">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Item</th>
+                          <th>1 ⭐</th>
+                          <th>2 ⭐</th>
+                          <th>3 ⭐</th>
+                          <th>4 ⭐</th>
+                          <th>5 ⭐</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for item in menu.breakfast %}
+                        <tr>
+                          <td>{{ item }}</td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="1">
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="2">
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="3">
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="4">
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="5">
+                              </label>
+                            </div>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                        {% for item in menu.lunch %}
+                        <tr>
+                          <td>{{ item }}</td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="1">
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="2">
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="3">
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="4">
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="5">
+                              </label>
+                            </div>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                        {% for item in menu.dinner %}
+                        <tr>
+                          <td>{{ item }}</td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="1">
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="2">
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="3">
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="4">
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="5">
+                              </label>
+                            </div>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <button type="submit" class="btn btn-primary mt-4 mb-2 btn-lg">Submit</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <h5 class="card-title">Breakfast</h5>
+            <div class="row">
+              <div class="col-lg-12 grid-margin">
+                <div class="row icons-list">
+                  {% for item in menu.breakfast %}
+                  <div style="justify-content: space-between;" class="col-sm-12">
+                    <span>{{item}}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h5 class="card-title">Lunch</h5>
+            <div class="row">
+              <div class="col-lg-12 grid-margin">
+                <div class="row icons-list">
+                  {% for item in menu.lunch %}
+                  <div style="justify-content: space-between;" class="col-sm-12">
+                    <span>{{item}}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h5 class="card-title">Dinner</h5>
+            <div class="row">
+              <div class="col-lg-12 grid-margin">
+                <div class="row icons-list">
+                  {% for item in menu.dinner %}
+                  <div style="justify-content: space-between;" class="col-sm-12">
+                    <span>{{item}}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div id="feedback-complaints" class="row">
+    <div class="card">
+      <div class="card-header mt-2">
+        <h2>Submit Feedback or Complaints</h2>
+      </div>
+      <div class="card-body">
+        <form enctype="multipart/form-data" method="POST" action="{% url 'studentfeedback' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="feedbackTextarea">Feedback or Complaint:</label>
+            <textarea name="complaint_description" class="form-control" id="feedbackTextarea" rows="3"
+              placeholder="Enter your feedback or complaint"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="attachmentInput">Attachment (Optional):</label>
+            <input multiple="true" name="complaint_file" type="file" class="form-control-file" id="attachmentInput"
+              accept="image/*" />
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content1 %}

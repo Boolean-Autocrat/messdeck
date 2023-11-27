@@ -1,0 +1,6 @@
+.card-header .mdi-arrow-right {
+  transition: 0.3s transform ease-in-out;
+}
+.card-header .collapsed .mdi-arrow-right {
+  transform: rotate(90deg);
+}

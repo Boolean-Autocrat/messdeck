@@ -1,0 +1,99 @@
+{% extends 'base_dashboard.html' %}
+{% load i18n l10n account socialaccount %}
+{% get_providers as socialaccount_providers %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+{% block content1 %}
+<div class="content-wrapper">
+    <div class="row">
+        {% if user.is_staff %}
+        <h5>Username: </h5>
+        <p>{{ user.username }}</p>
+        <h5>Name: </h5>
+        <p>{{ user.first_name }} {{ user.last_name }}</p>
+        <form method="post" action="{% url 'profile' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="psrn">PSRN: </label>
+                <input type="text" class="form-control" id="psrn" name="psrn" value="{{ staff.psrn }}">
+            </div>
+            <div class="row">
+                <div class="col-md-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Mess</h4>
+                            <div class="form-group">
+                                <label>Your mess is given below:</label>
+                                <select name="mess" id="mess" style="width:100%">
+                                    {% for staff_mess in staff.messes %}
+                                    {% if staff_mess == staff.mess %}
+                                    <option selected value="{{ staff_mess }}">{{ staff_mess }}</option>
+                                    {% else %}
+                                    <option value="{{ staff_mess }}">{{ staff_mess }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
+        {% else %}
+        <h5>Full Name: </h5>
+        <p>{{ user.first_name }} {{ user.last_name }}</p>
+        <form method="post" action="{% url 'profile' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="bits_id">BITS ID: </label>
+                <input type="text" class="form-control" id="bits_id" name="bits_id" value="{{ student.bits_id }}">
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Hostel</h4>
+                                <div class="form-group">
+                                    <label>Select your hostel from the list below:</label>
+                                    <select name="hostel" id="hostel" style="width:100%">
+                                        {% for stud_hostel in student.hostels %}
+                                        {% if stud_hostel == student.hostel %}
+                                        <option selected value="{{ stud_hostel }}">{{ stud_hostel }}</option>
+                                        {% else %}
+                                        <option value="{{ stud_hostel }}">{{ stud_hostel }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Mess</h4>
+                                <div class="form-group">
+                                    <label>Your mess is given below:</label>
+                                    <select disabled name="mess" id="mess" style="width:100%">
+                                        {% for stud_mess in student.messes %}
+                                        {% if stud_mess == student.mess %}
+                                        <option selected value="{{ stud_mess }}">{{ stud_mess }}</option>
+                                        {% else %}
+                                        <option value="{{ stud_mess }}">{{ stud_mess }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock content1 %}
