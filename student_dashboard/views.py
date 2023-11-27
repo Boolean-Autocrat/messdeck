@@ -74,17 +74,16 @@ def dashboard_view(request):
         ).breakfast
 
     next_meal_content = None
+
     if tomorrow:
         next_meal_content = tomorrow_meal
     else:
-        if next_meal_content is not None:
-            next_meal_content = (
-                today_meal.breakfast
-                if next_meal == "Breakfast"
-                else today_meal.lunch
-                if next_meal == "Lunch"
-                else today_meal.dinner
-            )
+        if next_meal == "Breakfast":
+            next_meal_content = today_meal.breakfast
+        elif next_meal == "Lunch":
+            next_meal_content = today_meal.lunch
+        elif next_meal == "Dinner":
+            next_meal_content = today_meal.dinner
 
     context = {
         "month": timezone.now().strftime("%B"),
@@ -145,20 +144,20 @@ def feedback_view(request):
             try:
                 for file in request.FILES.getlist("complaint_file"):
                     with open(
-                        f"media/complaints/{complaint_id}_{count}.{file.name.split('.')[-1]}",
+                        f"static/media/{complaint_id}_{count}.{file.name.split('.')[-1]}",
                         "wb+",
                     ) as destination:
                         for chunk in file.chunks():
                             destination.write(chunk)
                     if file.name.split(".")[-1] != "png":
                         im = Image.open(
-                            f"media/complaints/{complaint_id}_{count}.{file.name.split('.')[-1]}"
+                            f"static/media/{complaint_id}_{count}.{file.name.split('.')[-1]}"
                         )
-                        im.save(f"media/complaints/{complaint_id}_{count}.png", "png")
+                        im.save(f"static/media/{complaint_id}_{count}.png", "png")
                         os.remove(
-                            f"media/complaints/{complaint_id}_{count}.{file.name.split('.')[-1]}"
+                            f"static/media/{complaint_id}_{count}.{file.name.split('.')[-1]}"
                         )
-                    im = Image.open(f"media/complaints/{complaint_id}_{count}.png")
+                    im = Image.open(f"static/media/{complaint_id}_{count}.png")
                     width, height = im.size
                     if height > 1200 or width > 1200:
                         if width > height and str(width)[0] == "1":
@@ -176,7 +175,7 @@ def feedback_view(request):
                         im = im.resize((int(new_width), int(new_height)))
 
                     im.save(
-                        f"media/complaints/{complaint_id}_{count}.png",
+                        f"static/media/{complaint_id}_{count}.png",
                         "png",
                         optimize=True,
                         quality=50,

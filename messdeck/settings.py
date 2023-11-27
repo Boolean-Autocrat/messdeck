@@ -15,7 +15,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["handamessdeck.pythonanywhere.com"]
 
-
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = [
