@@ -17,7 +17,9 @@ Visit here: https://suyashmessdeck.pythonanywhere.com/
 ## Installation
 
 - Clone the repository
-- Create a virtual environment using `python -m venv venv` (Windows) or `source venv/bin/activate` (Linux)
+- Create a virtual environment using `python -m venv venv` and activate it using `source venv/bin/activate`
 - Install the requirements using `pip install -r requirements.txt`
 - Run the server using `python manage.py runserver`
+- Add a superuser using `python manage.py createsuperuser`
+- Visit `localhost:8000/admin` to add your google client id and secret key
 - Visit `localhost:8000` in your browser
