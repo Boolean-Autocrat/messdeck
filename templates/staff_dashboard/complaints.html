@@ -42,8 +42,8 @@
                                 {% for i in complaint.no_of_files|default:"0"|get_range %}
                                 <div class="col-sm-6">
                                     <img style="max-height: 500px;"
-                                        src="{% static 'complaints/' %}{{ complaint.complaint_id }}_{{ i }}.png"
-                                        alt="image" class="img-fluid rounded mb-3">
+                                        src="{% static 'media/' %}{{ complaint.complaint_id }}_{{ i }}.png" alt="image"
+                                        class="img-fluid rounded mb-3">
                                 </div>
                                 {% endfor %}
                             </div>
