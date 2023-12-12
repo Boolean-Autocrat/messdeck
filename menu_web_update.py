@@ -43,6 +43,7 @@ data[0] = data[0].replace("[{", "{")
 data = [x + "}" for x in data]
 for i in range(len(data)):
     data[i] = re.sub(r",\s*]", "]", data[i])
+    data[i] = re.sub(r",\s*}", "}", data[i])
     data[i] = json.loads(data[i])
 
 conn = sqlite3.connect("db.sqlite3")

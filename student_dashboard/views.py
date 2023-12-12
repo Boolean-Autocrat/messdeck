@@ -13,10 +13,12 @@ import os
 def dashboard_view(request):
     if request.user.is_staff:
         return redirect("staffdashboard")
-    menus = Menu.objects.filter(
-        date__year=(timezone.now()).year, date__month=(timezone.now()).month
-    )
     current_time = timezone.now() + timezone.timedelta(hours=5, minutes=30)
+    menus = Menu.objects.filter(date__month=current_time.month, date__lte=current_time)
+    next_menus = Menu.objects.filter(
+        date__month=current_time.month,
+        date__gte=current_time + timezone.timedelta(days=1),
+    )
     breakfast_start = current_time.replace(hour=7, minute=0, second=0, microsecond=0)
     breakfast_end = current_time.replace(hour=9, minute=0, second=0, microsecond=0)
     lunch_start = current_time.replace(hour=12, minute=0, second=0, microsecond=0)
@@ -64,13 +66,13 @@ def dashboard_view(request):
     elif lunch_end <= current_time < dinner_end:
         next_meal = "Dinner"
 
-    if Menu.objects.filter(date=timezone.now().date()).exists():
-        today_meal = Menu.objects.get(date=timezone.now().date())
+    if Menu.objects.filter(date=current_time.date()).exists():
+        today_meal = Menu.objects.get(date=current_time.date())
     if Menu.objects.filter(
-        date=timezone.now().date() + timezone.timedelta(days=1)
+        date=current_time.date() + timezone.timedelta(days=1)
     ).exists():
         tomorrow_meal = Menu.objects.get(
-            date=timezone.now().date() + timezone.timedelta(days=1)
+            date=current_time.date() + timezone.timedelta(days=1)
         ).breakfast
 
     next_meal_content = None
@@ -86,11 +88,13 @@ def dashboard_view(request):
             next_meal_content = today_meal.dinner
 
     context = {
-        "month": timezone.now().strftime("%B"),
+        "month": current_time.strftime("%B"),
         "menus": menus,
+        "next_menus": next_menus,
         "can_mark_attendance": can_mark_attendance,
         "already_marked": already_marked,
         "next_meal": next_meal,
+        "today_meal": today_meal,
         "next_meal_content": next_meal_content,
     }
     if request.method == "POST":
@@ -193,7 +197,7 @@ def feedback_view(request):
 
 @login_required(login_url="login")
 def mark_attendance(request):
-    current_time = timezone.now()
+    current_time = timezone.now() + timezone.timedelta(hours=5, minutes=30)
     breakfast_start = current_time.replace(hour=7, minute=0, second=0, microsecond=0)
     lunch_start = current_time.replace(hour=12, minute=0, second=0, microsecond=0)
     dinner_start = current_time.replace(hour=19, minute=0, second=0, microsecond=0)

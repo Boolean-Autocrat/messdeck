@@ -43,6 +43,125 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <h1>Today's Menu</h1>
+    <div class="card mb-3">
+      <div class="card-header">
+        <a data-bs-toggle="collapse" href="#today-menu" role="button" aria-expanded="false" aria-controls="today-menu">
+          <i class="mdi mdi-arrow-right float-start"></i>
+          {{today_meal.date}}
+        </a>
+      </div>
+      <div id="today-menu" class="collapse card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <h5 class="card-title">Breakfast</h5>
+            <div class="row">
+              <div class="col-lg-12 grid-margin">
+                <div class="row icons-list">
+                  {% for item in today_meal.breakfast %}
+                  <div style="justify-content: space-between;" class="col-sm-12">
+                    <span>{{item}}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h5 class="card-title">Lunch</h5>
+            <div class="row">
+              <div class="col-lg-12 grid-margin">
+                <div class="row icons-list">
+                  {% for item in today_meal.lunch %}
+                  <div style="justify-content: space-between;" class="col-sm-12">
+                    <span>{{item}}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h5 class="card-title">Dinner</h5>
+            <div class="row">
+              <div class="col-lg-12 grid-margin">
+                <div class="row icons-list">
+                  {% for item in today_meal.dinner %}
+                  <div style="justify-content: space-between;" class="col-sm-12">
+                    <span>{{item}}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% if next_menus %}
+  <div class="row">
+    <h1>Future Menus for {{month}}</h1>
+    {% for menu in next_menus %}
+    <div class="card mb-3">
+      <div class="card-header">
+        <a data-bs-toggle="collapse" href="#collapse-{{menu.date|remove_spaces}}-next" role="button"
+          aria-expanded="false" aria-controls="collapse-{{menu.date|remove_spaces}}-next">
+          <i class="mdi mdi-arrow-right float-start"></i>
+          {{menu.date}}
+        </a>
+      </div>
+      <div id="collapse-{{menu.date|remove_spaces}}-next" class="collapse card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <h5 class="card-title">Breakfast</h5>
+            <div class="row">
+              <div class="col-lg-12 grid-margin">
+                <div class="row icons-list">
+                  {% for item in menu.breakfast %}
+                  <div style="justify-content: space-between;" class="col-sm-12">
+                    <span>{{item}}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h5 class="card-title">Lunch</h5>
+            <div class="row">
+              <div class="col-lg-12 grid-margin">
+                <div class="row icons-list">
+                  {% for item in menu.lunch %}
+                  <div style="justify-content: space-between;" class="col-sm-12">
+                    <span>{{item}}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h5 class="card-title">Dinner</h5>
+            <div class="row">
+              <div class="col-lg-12 grid-margin">
+                <div class="row icons-list">
+                  {% for item in menu.dinner %}
+                  <div style="justify-content: space-between;" class="col-sm-12">
+                    <span>{{item}}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
   <div id="rate-menu" class="row">
     <h1>Rate the Menu for {{month}}</h1>
     {% for menu in menus %}
