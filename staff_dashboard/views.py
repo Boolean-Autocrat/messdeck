@@ -26,28 +26,16 @@ def dashboard_view(request):
     overall_item_ratings = {}
 
     for menu in all_menus:
-        item_ratings = {}
-
-        for item in menu.breakfast + menu.lunch + menu.dinner:
-            food_rating, created = FoodRating.objects.get_or_create(
-                menu=menu, item=item
-            )
-            ratings_list = food_rating.get_ratings_list()
-            avg_rating = (
-                round(sum(ratings_list) / len(ratings_list), 2) if ratings_list else 0
-            )
-            item_ratings[item] = avg_rating
-            if item in overall_item_ratings:
-                overall_item_ratings[item].append(avg_rating)
-            else:
-                overall_item_ratings[item] = [avg_rating]
-
-        overall_ratings = FoodRating.objects.filter(menu=menu).aggregate(
-            overall_avg=Avg("ratings")
+        food_ratings = FoodRating.objects.filter(menu=menu)
+        if not food_ratings.exists():
+            continue
+        item_ratings = food_ratings.annotate(average_rating=Avg("rating")).order_by(
+            "-average_rating"
         )
-
         menu.item_ratings = item_ratings
-
+        menu.overall_avg_rating = round(
+            food_ratings.aggregate(average_rating=Avg("rating"))["average_rating"], 2
+        )
     dates = [timezone.now().date() - timedelta(days=i) for i in range(5)]
     meals = ["Breakfast", "Lunch", "Dinner"]
     attendance_counts = []

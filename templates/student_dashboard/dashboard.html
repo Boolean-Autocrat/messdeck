@@ -38,6 +38,11 @@
               <span>{{item}}</span>
             </div>
             {% endfor %}
+            {% if not next_meal_content %}
+            <div style="justify-content: space-between;" class="col-sm-12">
+              <span>No menu available for this meal.</span>
+            </div>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -45,6 +50,13 @@
   </div>
   <div class="row">
     <h1>Today's Menu</h1>
+    {% if not today_meal %}
+    <div class="card mb-3">
+      <div class="card-header">
+        No menu available. Please check back later.
+      </div>
+    </div>
+    {% else %}
     <div class="card mb-3">
       <div class="card-header">
         <a data-bs-toggle="collapse" href="#today-menu" role="button" aria-expanded="false" aria-controls="today-menu">
@@ -99,10 +111,18 @@
         </div>
       </div>
     </div>
+    {% endif %}
   </div>
   {% if next_menus %}
   <div class="row">
     <h1>Future Menus for {{month}}</h1>
+    {% if not menus %}
+    <div class="card mb-3">
+      <div class="card-header">
+        No menu available. Please check back later.
+      </div>
+    </div>
+    {% endif %}
     {% for menu in next_menus %}
     <div class="card mb-3">
       <div class="card-header">
@@ -164,6 +184,13 @@
   {% endif %}
   <div id="rate-menu" class="row">
     <h1>Rate the Menu for {{month}}</h1>
+    {% if not menus %}
+    <div class="card mb-3">
+      <div class="card-header">
+        No menu available. Please check back later.
+      </div>
+    </div>
+    {% endif %}
     {% for menu in menus %}
     <div class="card mb-3">
       <div class="card-header">

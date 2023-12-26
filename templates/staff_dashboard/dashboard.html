@@ -43,16 +43,16 @@
           <div style="display: flex; justify-content: space-between;">
             <span>
               <i class="mdi mdi-arrow-right float-start"></i>
-              {{menu.date}}</span> {% if menu.item_ratings.values|average_ratings == 0 %}
+              {{menu.date}}</span> {% if not menu.overall_avg_rating %}
             <span class="badge badge-pill badge-danger">No Ratings</span>
-            {% elif menu.item_ratings.values|average_ratings < 2 %} <span class="badge badge-pill badge-danger">
-              {{menu.item_ratings.values|average_ratings}}</span>
-              {% elif menu.item_ratings.values|average_ratings < 3 %} <span class="badge badge-pill badge-warning">
-                {{menu.item_ratings.values|average_ratings}}</span>
-                {% elif menu.item_ratings.values|average_ratings < 4 %} <span class="badge badge-pill badge-info">
-                  {{menu.item_ratings.values|average_ratings}}</span>
+            {% elif menu.overall_avg_rating < 2 %} <span class="badge badge-pill badge-danger">
+              {{menu.overall_avg_rating}}</span>
+              {% elif menu.overall_avg_rating < 3 %} <span class="badge badge-pill badge-warning">
+                {{menu.overall_avg_rating}}</span>
+                {% elif menu.overall_avg_rating < 4 %} <span class="badge badge-pill badge-info">
+                  {{menu.overall_avg_rating}}</span>
                   {% else %}
-                  <span class="badge badge-pill badge-success">{{menu.item_ratings.values|average_ratings}}</span>
+                  <span class="badge badge-pill badge-success">{{menu.overall_avg_rating}}</span>
                   {% endif %}
           </div>
         </a>
@@ -61,31 +61,34 @@
         <div class="row">
           <div class="col-md-12">
             <h5 class="card-title">Overall Avg. Rating:
-              {% if menu.item_ratings.values|average_ratings == 0 %}
+              {% if not menu.overall_avg_rating %}
               <span class="badge badge-pill badge-danger">No Ratings</span>
-              {% elif menu.item_ratings.values|average_ratings < 2 %} <span class="badge badge-pill badge-danger">
-                {{menu.item_ratings.values|average_ratings}}</span>
-                {% elif menu.item_ratings.values|average_ratings < 3 %} <span class="badge badge-pill badge-warning">
-                  {{menu.item_ratings.values|average_ratings}}</span>
-                  {% elif menu.item_ratings.values|average_ratings < 4 %} <span class="badge badge-pill badge-info">
-                    {{menu.item_ratings.values|average_ratings}}</span>
+              {% elif menu.overall_avg_rating < 2 %} <span class="badge badge-pill badge-danger">
+                {{menu.overall_avg_rating}}</span>
+                {% elif menu.overall_avg_rating < 3 %} <span class="badge badge-pill badge-warning">
+                  {{menu.overall_avg_rating}}</span>
+                  {% elif menu.overall_avg_rating < 4 %} <span class="badge badge-pill badge-info">
+                    {{menu.overall_avg_rating}}</span>
                     {% else %}
-                    <span class="badge badge-pill badge-success">{{menu.item_ratings.values|average_ratings}}</span>
+                    <span class="badge badge-pill badge-success">{{menu.overall_avg_rating}}</span>
                     {% endif %}
             </h5>
             <div class="row">
               <div class="col-lg-12 grid-margin">
                 <div class="row icons-list">
-                  {% for item, avg_rating in menu.item_ratings.items %}
+                  {% for item in menu.item_ratings %}
                   <div style="justify-content: space-between;" class="col-sm-4">
-                    <span>{{item}}</span>
-                    {% if avg_rating == 0 %}
+                    <span>{{item.item}}</span>
+                    {% if item.average_rating == 0 %}
                     <span class="badge badge-pill badge-danger">No Ratings</span>
-                    {% elif avg_rating < 2 %} <span class="badge badge-pill badge-danger">{{avg_rating}}</span>
-                      {% elif avg_rating < 3 %} <span class="badge badge-pill badge-warning">{{avg_rating}}</span>
-                        {% elif avg_rating < 4 %} <span class="badge badge-pill badge-info">{{avg_rating}}</span>
+                    {% elif item.average_rating < 2 %} <span class="badge badge-pill badge-danger">
+                      {{item.average_rating}}</span>
+                      {% elif item.average_rating < 3 %} <span class="badge badge-pill badge-warning">
+                        {{item.average_rating}}</span>
+                        {% elif item.average_rating < 4 %} <span class="badge badge-pill badge-info">
+                          {{item.average_rating}}</span>
                           {% else %}
-                          <span class="badge badge-pill badge-success">{{avg_rating}}</span>
+                          <span class="badge badge-pill badge-success">{{item.average_rating}}</span>
                           {% endif %}
                   </div>
                   {% endfor %}

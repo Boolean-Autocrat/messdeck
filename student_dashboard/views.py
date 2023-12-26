@@ -66,6 +66,8 @@ def dashboard_view(request):
     elif lunch_end <= current_time < dinner_end:
         next_meal = "Dinner"
 
+    tomorrow_meal = None
+    today_meal = None
     if Menu.objects.filter(date=current_time.date()).exists():
         today_meal = Menu.objects.get(date=current_time.date())
     if Menu.objects.filter(
@@ -80,7 +82,9 @@ def dashboard_view(request):
     if tomorrow:
         next_meal_content = tomorrow_meal
     else:
-        if next_meal == "Breakfast":
+        if not today_meal:
+            next_meal_content = None
+        elif next_meal == "Breakfast":
             next_meal_content = today_meal.breakfast
         elif next_meal == "Lunch":
             next_meal_content = today_meal.lunch
@@ -113,9 +117,9 @@ def dashboard_view(request):
                     )
                     return redirect("studentdashboard")
                 food_rating, created = FoodRating.objects.get_or_create(
-                    menu=menu, item=item
+                    menu=menu, item=item, user=request.user
                 )
-                food_rating.add_rating(rating)
+                food_rating.rating = rating
                 food_rating.save()
         messages.success(request, "Your ratings have been submitted.")
         return redirect("studentdashboard")
