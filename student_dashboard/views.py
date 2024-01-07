@@ -73,9 +73,14 @@ def dashboard_view(request):
     if Menu.objects.filter(
         date=current_time.date() + timezone.timedelta(days=1)
     ).exists():
+        tomorrow_meal_temp = []
         tomorrow_meal = Menu.objects.get(
             date=current_time.date() + timezone.timedelta(days=1)
-        ).breakfast
+        ).items
+        for item in tomorrow_meal:
+            if item.meal == "Breakfast":
+                tomorrow_meal_temp.append(item)
+        tomorrow_meal = tomorrow_meal_temp
 
     next_meal_content = None
 
@@ -85,11 +90,17 @@ def dashboard_view(request):
         if not today_meal:
             next_meal_content = None
         elif next_meal == "Breakfast":
-            next_meal_content = today_meal.breakfast
+            next_meal_content = [
+                item for item in today_meal.items if item.meal == "Breakfast"
+            ]
         elif next_meal == "Lunch":
-            next_meal_content = today_meal.lunch
+            next_meal_content = [
+                item for item in today_meal.items if item.meal == "Lunch"
+            ]
         elif next_meal == "Dinner":
-            next_meal_content = today_meal.dinner
+            next_meal_content = [
+                item for item in today_meal.items if item.meal == "Dinner"
+            ]
 
     context = {
         "month": current_time.strftime("%B"),

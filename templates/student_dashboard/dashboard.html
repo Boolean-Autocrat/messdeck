@@ -35,7 +35,7 @@
           <div class="row icons-list">
             {% for item in next_meal_content %}
             <div style="justify-content: space-between;" class="col-sm-12">
-              <span>{{item}}</span>
+              <span>{{item.item}}</span>
             </div>
             {% endfor %}
             {% if not next_meal_content %}
@@ -71,10 +71,12 @@
             <div class="row">
               <div class="col-lg-12 grid-margin">
                 <div class="row icons-list">
-                  {% for item in today_meal.breakfast %}
+                  {% for item in today_meal.items %}
+                  {% if item.meal == 'Breakfast' %}
                   <div style="justify-content: space-between;" class="col-sm-12">
-                    <span>{{item}}</span>
+                    <span>{{item.item}}</span>
                   </div>
+                  {% endif %}
                   {% endfor %}
                 </div>
               </div>
@@ -85,10 +87,12 @@
             <div class="row">
               <div class="col-lg-12 grid-margin">
                 <div class="row icons-list">
-                  {% for item in today_meal.lunch %}
+                  {% for item in today_meal.items %}
+                  {% if item.meal == 'Lunch' %}
                   <div style="justify-content: space-between;" class="col-sm-12">
-                    <span>{{item}}</span>
+                    <span>{{item.item}}</span>
                   </div>
+                  {% endif %}
                   {% endfor %}
                 </div>
               </div>
@@ -99,10 +103,12 @@
             <div class="row">
               <div class="col-lg-12 grid-margin">
                 <div class="row icons-list">
-                  {% for item in today_meal.dinner %}
+                  {% for item in today_meal.items %}
+                  {% if item.meal == 'Dinner' %}
                   <div style="justify-content: space-between;" class="col-sm-12">
-                    <span>{{item}}</span>
+                    <span>{{item.item}}</span>
                   </div>
+                  {% endif %}
                   {% endfor %}
                 </div>
               </div>
@@ -139,10 +145,12 @@
             <div class="row">
               <div class="col-lg-12 grid-margin">
                 <div class="row icons-list">
-                  {% for item in menu.breakfast %}
+                  {% for item in menu.items %}
+                  {% if item.meal == 'Breakfast' %}
                   <div style="justify-content: space-between;" class="col-sm-12">
-                    <span>{{item}}</span>
+                    <span>{{item.item}}</span>
                   </div>
+                  {% endif %}
                   {% endfor %}
                 </div>
               </div>
@@ -153,10 +161,12 @@
             <div class="row">
               <div class="col-lg-12 grid-margin">
                 <div class="row icons-list">
-                  {% for item in menu.lunch %}
+                  {% for item in menu.items %}
+                  {% if item.meal == 'Lunch' %}
                   <div style="justify-content: space-between;" class="col-sm-12">
-                    <span>{{item}}</span>
+                    <span>{{item.item}}</span>
                   </div>
+                  {% endif %}
                   {% endfor %}
                 </div>
               </div>
@@ -167,10 +177,12 @@
             <div class="row">
               <div class="col-lg-12 grid-margin">
                 <div class="row icons-list">
-                  {% for item in menu.dinner %}
+                  {% for item in menu.items %}
+                  {% if item.meal == 'Dinner' %}
                   <div style="justify-content: space-between;" class="col-sm-12">
-                    <span>{{item}}</span>
+                    <span>{{item.item}}</span>
                   </div>
+                  {% endif %}
                   {% endfor %}
                 </div>
               </div>
@@ -230,125 +242,131 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% for item in menu.breakfast %}
+                        {% for item in menu.items %}
+                        {% if item.meal == 'Breakfast' %}
                         <tr>
-                          <td>{{ item }}</td>
+                          <td>{{ item.item }}</td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="1">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="1">
                               </label>
                             </div>
                           </td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="2">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="2">
                               </label>
                             </div>
                           </td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="3">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="3">
                               </label>
                             </div>
                           </td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="4">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="4">
                               </label>
                             </div>
                           </td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="5">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="5">
                               </label>
                             </div>
                           </td>
                         </tr>
+                        {% endif %}
                         {% endfor %}
-                        {% for item in menu.lunch %}
+                        {% for item in menu.items %}
+                        {% if item.meal == 'Lunch' %}
                         <tr>
-                          <td>{{ item }}</td>
+                          <td>{{ item.item }}</td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="1">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="1">
                               </label>
                             </div>
                           </td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="2">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="2">
                               </label>
                             </div>
                           </td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="3">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="3">
                               </label>
                             </div>
                           </td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="4">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="4">
                               </label>
                             </div>
                           </td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="5">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="5">
                               </label>
                             </div>
                           </td>
                         </tr>
+                        {% endif %}
                         {% endfor %}
-                        {% for item in menu.dinner %}
+                        {% for item in menu.items %}
+                        {% if item.meal == 'Dinner' %}
                         <tr>
-                          <td>{{ item }}</td>
+                          <td>{{ item.item }}</td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="1">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="1">
                               </label>
                             </div>
                           </td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="2">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="2">
                               </label>
                             </div>
                           </td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="3">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="3">
                               </label>
                             </div>
                           </td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="4">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="4">
                               </label>
                             </div>
                           </td>
                           <td>
                             <div class="form-check form-check-primary">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ item }}_rating" value="5">
+                                <input class="form-check-input" type="radio" name="{{ item.item }}_rating" value="5">
                               </label>
                             </div>
                           </td>
                         </tr>
+                        {% endif %}
                         {% endfor %}
                       </tbody>
                     </table>
@@ -365,10 +383,12 @@
             <div class="row">
               <div class="col-lg-12 grid-margin">
                 <div class="row icons-list">
-                  {% for item in menu.breakfast %}
+                  {% for item in menu.items %}
+                  {% if item.meal == 'Breakfast' %}
                   <div style="justify-content: space-between;" class="col-sm-12">
-                    <span>{{item}}</span>
+                    <span>{{item.item}}</span>
                   </div>
+                  {% endif %}
                   {% endfor %}
                 </div>
               </div>
@@ -379,10 +399,12 @@
             <div class="row">
               <div class="col-lg-12 grid-margin">
                 <div class="row icons-list">
-                  {% for item in menu.lunch %}
+                  {% for item in menu.items %}
+                  {% if item.meal == 'Lunch' %}
                   <div style="justify-content: space-between;" class="col-sm-12">
-                    <span>{{item}}</span>
+                    <span>{{item.item}}</span>
                   </div>
+                  {% endif %}
                   {% endfor %}
                 </div>
               </div>
@@ -393,10 +415,12 @@
             <div class="row">
               <div class="col-lg-12 grid-margin">
                 <div class="row icons-list">
-                  {% for item in menu.dinner %}
+                  {% for item in menu.items %}
+                  {% if item.meal == 'Dinner' %}
                   <div style="justify-content: space-between;" class="col-sm-12">
-                    <span>{{item}}</span>
+                    <span>{{item.item}}</span>
                   </div>
+                  {% endif %}
                   {% endfor %}
                 </div>
               </div>

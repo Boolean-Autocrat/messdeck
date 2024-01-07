@@ -9,7 +9,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "messdeck.settings")
 import django
 
 django.setup()
-from staff_dashboard.models import Menu
+from staff_dashboard.models import Menu, Food
 
 static_breakfast = [
     "CHOICE OF EGG",
@@ -61,15 +61,28 @@ for meal in data:
     for item in meal:
         if Menu.objects.filter(date=date).exists():
             menu = Menu.objects.get(date=date)
-            menu.breakfast = meal["B"]
-            menu.lunch = meal["L"]
-            menu.dinner = meal["D"]
             menu.save()
+            for food in meal["B"]:
+                if not Food.objects.filter(menu=menu, meal="Breakfast", item=food):
+                    food = Food(menu=menu, meal="Breakfast", item=food)
+                    food.save()
+            for food in meal["L"]:
+                if not Food.objects.filter(menu=menu, meal="Lunch", item=food):
+                    food = Food(menu=menu, meal="Lunch", item=food)
+                    food.save()
+            for food in meal["D"]:
+                if not Food.objects.filter(menu=menu, meal="Dinner", item=food):
+                    food = Food(menu=menu, meal="Dinner", item=food)
+                    food.save()
         else:
-            menu = Menu(
-                date=date,
-                breakfast=meal["B"],
-                lunch=meal["L"],
-                dinner=meal["D"],
-            )
+            menu = Menu(date=date)
             menu.save()
+            for food in meal["B"]:
+                food = Food(menu=menu, meal="Breakfast", item=food)
+                food.save()
+            for food in meal["L"]:
+                food = Food(menu=menu, meal="Lunch", item=food)
+                food.save()
+            for food in meal["D"]:
+                food = Food(menu=menu, meal="Dinner", item=food)
+                food.save()

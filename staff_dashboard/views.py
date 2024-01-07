@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .update_menu import update_mess_menu
-from .models import Menu, FoodRating
+from .models import Menu, FoodRating, Food
 from django.db.models import Avg, Count
 from django.utils import timezone
 from datetime import timedelta
@@ -22,7 +22,6 @@ def dashboard_view(request):
     all_menus = Menu.objects.filter(
         date__year=(timezone.now()).year, date__month=(timezone.now()).month
     )
-
     overall_item_ratings = {}
 
     for menu in all_menus:
@@ -76,18 +75,37 @@ def dashboard_view(request):
                     # check if menu for date already exists
                     if Menu.objects.filter(date=date).exists():
                         menu = Menu.objects.get(date=date)
-                        menu.breakfast = meals["BREAKFAST"]
-                        menu.lunch = meals["LUNCH"]
-                        menu.dinner = meals["DINNER"]
                         menu.save()
+                        for food in meals["BREAKFAST"]:
+                            if not Food.objects.filter(
+                                menu=menu, meal="Breakfast", item=food
+                            ):
+                                food = Food(menu=menu, meal="Breakfast", item=food)
+                                food.save()
+                        for food in meals["LUNCH"]:
+                            if not Food.objects.filter(
+                                menu=menu, meal="Lunch", item=food
+                            ):
+                                food = Food(menu=menu, meal="Lunch", item=food)
+                                food.save()
+                        for food in meals["DINNER"]:
+                            if not Food.objects.filter(
+                                menu=menu, meal="Dinner", item=food
+                            ):
+                                food = Food(menu=menu, meal="Dinner", item=food)
+                                food.save()
                     else:
-                        menu = Menu(
-                            date=date,
-                            breakfast=meals["BREAKFAST"],
-                            lunch=meals["LUNCH"],
-                            dinner=meals["DINNER"],
-                        )
+                        menu = Menu(date=date)
                         menu.save()
+                        for food in meals["BREAKFAST"]:
+                            food = Food(menu=menu, meal="Breakfast", item=food)
+                            food.save()
+                        for food in meals["LUNCH"]:
+                            food = Food(menu=menu, meal="Lunch", item=food)
+                            food.save()
+                        for food in meals["DINNER"]:
+                            food = Food(menu=menu, meal="Dinner", item=food)
+                            food.save()
                 messages.success(request, "Menu updated successfully!")
                 return redirect("staffdashboard")
         else:
